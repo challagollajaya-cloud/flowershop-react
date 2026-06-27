@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+const API = 'https://flowershop-api.politegrass-1122600a.uksouth.azurecontainerapps.io';
+
 function Shop() {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -11,7 +13,7 @@ function Shop() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get('https://flowershop-api.politegrass-1122600a.uksouth.azurecontainerapps.io/api/products')
+        axios.get(`${API}/api/products`)
             .then(response => {
                 setProducts(response.data);
                 setLoading(false);
@@ -30,7 +32,7 @@ function Shop() {
         }
 
         axios.post(
-            'https://flowershop-api.politegrass-1122600a.uksouth.azurecontainerapps.io/api/cart/add',
+            `${API}/api/cart/add`,
             null,
             {
                 params: {
@@ -41,14 +43,11 @@ function Shop() {
             }
         )
             .then(() => {
-                setMessage(productName +
-                    ' added to cart! 🛒');
-                setTimeout(() =>
-                    setMessage(''), 2000);
+                setMessage(productName + ' added to cart! 🛒');
+                setTimeout(() => setMessage(''), 2000);
             })
             .catch(() => {
-                setMessage(
-                    'Please login first!');
+                setMessage('Please login first!');
                 setTimeout(() => {
                     setMessage('');
                     navigate('/login');
@@ -82,9 +81,7 @@ function Shop() {
 
     return (
         <div>
-            <div className="d-flex
-                justify-content-between
-                align-items-center mb-4">
+            <div className="d-flex justify-content-between align-items-center mb-4">
                 <h2 style={{ color: '#1B3A5C' }}>
                     🌸 Our Flowers
                 </h2>
@@ -109,8 +106,7 @@ function Shop() {
                     className="form-control form-control-lg"
                     placeholder="🔍 Search flowers..."
                     value={search}
-                    onChange={e =>
-                        setSearch(e.target.value)}
+                    onChange={e => setSearch(e.target.value)}
                     style={{ borderColor: '#1B3A5C' }}
                 />
             </div>
@@ -130,17 +126,31 @@ function Shop() {
                         <div
                             className="card h-100 shadow-sm border-0"
                             style={{ borderRadius: '12px' }}>
-                            <div style={{
-                                backgroundColor: '#1B3A5C',
-                                borderRadius: '12px 12px 0 0',
-                                padding: '20px',
-                                textAlign: 'center',
-                                fontSize: '48px'
-                            }}>
-                                🌸
-                            </div>
-                            <div className="card-body
-                                d-flex flex-column p-3">
+
+                            {product.imageUrl ? (
+                                <img
+                                    src={product.imageUrl}
+                                    alt={product.name}
+                                    style={{
+                                        width: '100%',
+                                        height: '200px',
+                                        objectFit: 'cover',
+                                        borderRadius: '12px 12px 0 0'
+                                    }}
+                                />
+                            ) : (
+                                <div style={{
+                                    backgroundColor: '#1B3A5C',
+                                    borderRadius: '12px 12px 0 0',
+                                    padding: '20px',
+                                    textAlign: 'center',
+                                    fontSize: '48px'
+                                }}>
+                                    🌸
+                                </div>
+                            )}
+
+                            <div className="card-body d-flex flex-column p-3">
                                 <h5 className="card-title fw-bold mb-1">
                                     {product.name}
                                 </h5>
@@ -154,9 +164,7 @@ function Shop() {
                                 <p className="card-text text-muted small flex-grow-1">
                                     {product.description}
                                 </p>
-                                <div className="d-flex
-                                    justify-content-between
-                                    align-items-center mb-3">
+                                <div className="d-flex justify-content-between align-items-center mb-3">
                                     <span className="fw-bold fs-5 text-success">
                                         ₹{product.price}
                                     </span>
@@ -170,14 +178,8 @@ function Shop() {
                                         backgroundColor: '#1B3A5C',
                                         borderRadius: '8px'
                                     }}
-                                    onClick={() =>
-                                        addToCart(
-                                            product.id,
-                                            product.name
-                                        )}
-                                    disabled={
-                                        product.quantity === 0
-                                    }>
+                                    onClick={() => addToCart(product.id, product.name)}
+                                    disabled={product.quantity === 0}>
                                     {product.quantity === 0
                                         ? 'Out of Stock'
                                         : '🛒 Add to Cart'}

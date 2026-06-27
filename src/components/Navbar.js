@@ -38,6 +38,21 @@ function Navbar() {
                         📦 Orders
                     </Link>
 
+                    {username === 'admin' && (
+                        <div className="d-flex gap-2">
+                            <Link
+                                className="nav-link text-white"
+                                to="/admin/products">
+                                🌸 Manage Products
+                            </Link>
+                            <Link
+                                className="nav-link text-white"
+                                to="/admin/orders">
+                                📋 Manage Orders
+                            </Link>
+                        </div>
+                    )}
+
                     {username ? (
                         <div className="d-flex gap-2
                             align-items-center">
