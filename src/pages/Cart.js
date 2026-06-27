@@ -11,7 +11,7 @@ function Cart() {
 
     useEffect(() => {
         loadCart();
-    }, []);
+    }, [loadCart]);
 
     const loadCart = () => {
         axios.get('https://flowershop-api.politegrass-1122600a.uksouth.azurecontainerapps.io/api/cart', {

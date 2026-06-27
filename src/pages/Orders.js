@@ -21,7 +21,7 @@ function Orders() {
                     navigate('/login');
                 }
             });
-    }, []);
+    }, [navigate]);
 
     // get badge color based on status
     const getBadgeColor = (status) => {
