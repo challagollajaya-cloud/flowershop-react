@@ -26,8 +26,11 @@ jobs:
         env:
           CI: false
 
-      - name: Copy routing config
-        run: cp staticwebapp.config.json build/
+      - name: Copy config to build folder
+        run: cp staticwebapp.config.json build/staticwebapp.config.json
+
+      - name: Verify config exists
+        run: cat build/staticwebapp.config.json
 
       - name: Deploy to Azure Static Web Apps
         uses: Azure/static-web-apps-deploy@v1
