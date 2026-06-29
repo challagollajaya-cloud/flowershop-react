@@ -22,3 +22,4 @@ jobs:
           app_location: "/"
           api_location: ""
           output_location: "build"
+          app_build_command: "CI=false npm run build"
