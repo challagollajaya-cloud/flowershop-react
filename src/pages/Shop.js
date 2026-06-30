@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-motion';
+import { useNavigate } from 'react-router-dom';
 
 const API = 'https://flowershop-api.politegrass-1122600a.uksouth.azurecontainerapps.io';
 
