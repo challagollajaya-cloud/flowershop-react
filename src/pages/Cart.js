@@ -4,6 +4,12 @@ import { useNavigate } from 'react-router-dom';
 
 const API = 'https://flowershop-api.politegrass-1122600a.uksouth.azurecontainerapps.io';
 
+const getAuthHeader = () => ({
+    headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+    }
+});
+
 function Cart() {
     const [cartItems, setCartItems] = useState([]);
     const [total, setTotal] = useState(0);
@@ -12,9 +18,7 @@ function Cart() {
     const navigate = useNavigate();
 
     const loadCart = useCallback(() => {
-        axios.get(`${API}/api/cart`, {
-            withCredentials: true
-        })
+        axios.get(`${API}/api/cart`, getAuthHeader())
             .then(res => {
                 const data = res.data;
                 if (Array.isArray(data)) {
@@ -44,8 +48,7 @@ function Cart() {
     }, [loadCart]);
 
     const removeItem = (cartId) => {
-        axios.delete(`${API}/api/cart/${cartId}`,
-            { withCredentials: true })
+        axios.delete(`${API}/api/cart/${cartId}`, getAuthHeader())
             .then(() => {
                 setMessage('Item removed!');
                 loadCart();
@@ -55,8 +58,7 @@ function Cart() {
     };
 
     const checkout = () => {
-        axios.post(`${API}/api/orders/checkout`, {},
-            { withCredentials: true })
+        axios.post(`${API}/api/orders/checkout`, {}, getAuthHeader())
             .then(() => {
                 setMessage('Order placed! 🎉');
                 setCartItems([]);

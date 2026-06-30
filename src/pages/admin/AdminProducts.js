@@ -3,6 +3,12 @@ import axios from 'axios';
 
 const API = 'https://flowershop-api.politegrass-1122600a.uksouth.azurecontainerapps.io';
 
+const getAuthHeader = () => ({
+    headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+    }
+});
+
 function AdminProducts() {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -37,7 +43,7 @@ function AdminProducts() {
 
         if (editProduct) {
             axios.put(`${API}/api/admin/products/${editProduct.id}`,
-                data, { withCredentials: true })
+                data, getAuthHeader())
                 .then(() => {
                     setMessage('Product updated! ✅');
                     resetForm();
@@ -46,7 +52,7 @@ function AdminProducts() {
                 .catch(() => setMessage('Failed! Login as admin first!'));
         } else {
             axios.post(`${API}/api/admin/products`,
-                data, { withCredentials: true })
+                data, getAuthHeader())
                 .then(() => {
                     setMessage('Product added! ✅');
                     resetForm();
@@ -58,8 +64,7 @@ function AdminProducts() {
 
     const handleDelete = (id) => {
         if (window.confirm('Delete this product?')) {
-            axios.delete(`${API}/api/admin/products/${id}`,
-                { withCredentials: true })
+            axios.delete(`${API}/api/admin/products/${id}`, getAuthHeader())
                 .then(() => {
                     setMessage('Product deleted! ✅');
                     loadProducts();
@@ -119,60 +124,52 @@ function AdminProducts() {
                         <form onSubmit={handleSubmit}>
                             <div className="row">
                                 <div className="col-md-6 mb-3">
-                                    <input
-                                        className="form-control"
-                                        placeholder="Product name"
-                                        value={form.name}
-                                        onChange={e => setForm({...form, name: e.target.value})}
-                                        required />
+                                    <input className="form-control"
+                                           placeholder="Product name"
+                                           value={form.name}
+                                           onChange={e => setForm({...form, name: e.target.value})}
+                                           required />
                                 </div>
                                 <div className="col-md-6 mb-3">
-                                    <input
-                                        className="form-control"
-                                        placeholder="Category"
-                                        value={form.category}
-                                        onChange={e => setForm({...form, category: e.target.value})}
-                                        required />
+                                    <input className="form-control"
+                                           placeholder="Category"
+                                           value={form.category}
+                                           onChange={e => setForm({...form, category: e.target.value})}
+                                           required />
                                 </div>
                                 <div className="col-md-6 mb-3">
-                                    <input
-                                        className="form-control"
-                                        placeholder="Price"
-                                        type="number"
-                                        value={form.price}
-                                        onChange={e => setForm({...form, price: e.target.value})}
-                                        required />
+                                    <input className="form-control"
+                                           placeholder="Price"
+                                           type="number"
+                                           value={form.price}
+                                           onChange={e => setForm({...form, price: e.target.value})}
+                                           required />
                                 </div>
                                 <div className="col-md-6 mb-3">
-                                    <input
-                                        className="form-control"
-                                        placeholder="Quantity"
-                                        type="number"
-                                        value={form.quantity}
-                                        onChange={e => setForm({...form, quantity: e.target.value})}
-                                        required />
+                                    <input className="form-control"
+                                           placeholder="Quantity"
+                                           type="number"
+                                           value={form.quantity}
+                                           onChange={e => setForm({...form, quantity: e.target.value})}
+                                           required />
                                 </div>
                                 <div className="col-12 mb-3">
-                                    <input
-                                        className="form-control"
-                                        placeholder="Image URL"
-                                        value={form.imageUrl}
-                                        onChange={e => setForm({...form, imageUrl: e.target.value})}
-                                    />
+                                    <input className="form-control"
+                                           placeholder="Image URL"
+                                           value={form.imageUrl}
+                                           onChange={e => setForm({...form, imageUrl: e.target.value})} />
                                 </div>
                                 <div className="col-12 mb-3">
-                                    <textarea
-                                        className="form-control"
-                                        placeholder="Description"
-                                        value={form.description}
-                                        onChange={e => setForm({...form, description: e.target.value})}
-                                        required />
+                                    <textarea className="form-control"
+                                              placeholder="Description"
+                                              value={form.description}
+                                              onChange={e => setForm({...form, description: e.target.value})}
+                                              required />
                                 </div>
                             </div>
-                            <button
-                                type="submit"
-                                className="btn text-white"
-                                style={{ backgroundColor: '#1B3A5C' }}>
+                            <button type="submit"
+                                    className="btn text-white"
+                                    style={{ backgroundColor: '#1B3A5C' }}>
                                 {editProduct ? 'Update Product' : 'Add Product'}
                             </button>
                         </form>

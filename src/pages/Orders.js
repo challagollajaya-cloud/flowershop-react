@@ -11,7 +11,9 @@ function Orders() {
 
     useEffect(() => {
         axios.get(`${API}/api/orders`, {
-            withCredentials: true
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
         })
             .then(res => {
                 setOrders(res.data);
@@ -41,8 +43,7 @@ function Orders() {
 
     return (
         <div>
-            <h2 className="mb-4"
-                style={{ color: '#1B3A5C' }}>
+            <h2 className="mb-4" style={{ color: '#1B3A5C' }}>
                 📦 My Orders
             </h2>
 

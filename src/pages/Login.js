@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+const API = 'https://flowershop-api.politegrass-1122600a.uksouth.azurecontainerapps.io';
+
 function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -13,26 +15,20 @@ function Login() {
         setLoading(true);
         setError('');
 
-        // Spring Security needs form data!
-        const params = new URLSearchParams();
-        params.append('username', username);
-        params.append('password', password);
-
         try {
-            const response = await fetch(
-                'https://flowershop-api.politegrass-1122600a.uksouth.azurecontainerapps.io/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type':
-                            'application/x-www-form-urlencoded'
-                    },
-                    body: params,
-                    credentials: 'include'
-                });
+            const response = await fetch(`${API}/api/auth/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            });
 
-            if (response.ok ||
-                response.url.includes('/api/products')) {
-                localStorage.setItem('username', username);
+            if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('username', data.username);
+                localStorage.setItem('role', data.role);
                 setLoading(false);
                 navigate('/shop');
             } else {
@@ -53,9 +49,7 @@ function Login() {
                     <div className="card-body p-4">
 
                         <div className="text-center mb-4">
-                            <div style={{ fontSize: '48px' }}>
-                                🌸
-                            </div>
+                            <div style={{ fontSize: '48px' }}>🌸</div>
                             <h3 className="fw-bold"
                                 style={{ color: '#1B3A5C' }}>
                                 Welcome Back!
@@ -80,8 +74,7 @@ function Login() {
                                     type="text"
                                     className="form-control"
                                     value={username}
-                                    onChange={e =>
-                                        setUsername(e.target.value)}
+                                    onChange={e => setUsername(e.target.value)}
                                     placeholder="Enter username"
                                     required />
                             </div>
@@ -93,8 +86,7 @@ function Login() {
                                     type="password"
                                     className="form-control"
                                     value={password}
-                                    onChange={e =>
-                                        setPassword(e.target.value)}
+                                    onChange={e => setPassword(e.target.value)}
                                     placeholder="Enter password"
                                     required />
                             </div>
@@ -112,8 +104,7 @@ function Login() {
 
                         <p className="text-center mt-3 text-muted">
                             No account?{' '}
-                            <a href="/register"
-                               style={{ color: '#1B3A5C' }}>
+                            <a href="/register" style={{ color: '#1B3A5C' }}>
                                 Register here
                             </a>
                         </p>

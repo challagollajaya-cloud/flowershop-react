@@ -25,8 +25,8 @@ function Shop() {
     }, []);
 
     const addToCart = (productId, productName) => {
-        const username = localStorage.getItem('username');
-        if (!username) {
+        const token = localStorage.getItem('token');
+        if (!token) {
             navigate('/login');
             return;
         }
@@ -39,7 +39,9 @@ function Shop() {
                     productId: productId,
                     quantity: 1
                 },
-                withCredentials: true
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
             }
         )
             .then(() => {
@@ -56,8 +58,7 @@ function Shop() {
     };
 
     const filtered = products.filter(p =>
-        p.name.toLowerCase()
-            .includes(search.toLowerCase())
+        p.name.toLowerCase().includes(search.toLowerCase())
     );
 
     if (loading) {
@@ -73,9 +74,7 @@ function Shop() {
 
     if (error) {
         return (
-            <div className="alert alert-danger">
-                {error}
-            </div>
+            <div className="alert alert-danger">{error}</div>
         );
     }
 
@@ -95,9 +94,7 @@ function Shop() {
             </div>
 
             {message && (
-                <div className="alert alert-success">
-                    {message}
-                </div>
+                <div className="alert alert-success">{message}</div>
             )}
 
             <div className="mb-4">
@@ -121,11 +118,9 @@ function Shop() {
 
             <div className="row">
                 {filtered.map(product => (
-                    <div className="col-md-4 mb-4"
-                         key={product.id}>
-                        <div
-                            className="card h-100 shadow-sm border-0"
-                            style={{ borderRadius: '12px' }}>
+                    <div className="col-md-4 mb-4" key={product.id}>
+                        <div className="card h-100 shadow-sm border-0"
+                             style={{ borderRadius: '12px' }}>
 
                             {product.imageUrl ? (
                                 <img

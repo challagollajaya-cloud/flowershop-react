@@ -3,6 +3,12 @@ import axios from 'axios';
 
 const API = 'https://flowershop-api.politegrass-1122600a.uksouth.azurecontainerapps.io';
 
+const getAuthHeader = () => ({
+    headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+    }
+});
+
 function AdminOrders() {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -13,8 +19,7 @@ function AdminOrders() {
     }, []);
 
     const loadOrders = () => {
-        axios.get(`${API}/api/admin/orders`,
-            { withCredentials: true })
+        axios.get(`${API}/api/admin/orders`, getAuthHeader())
             .then(res => {
                 setOrders(res.data);
                 setLoading(false);
@@ -25,7 +30,7 @@ function AdminOrders() {
     const updateStatus = (orderId, status) => {
         axios.put(`${API}/api/admin/orders/${orderId}/status`,
             { status },
-            { withCredentials: true })
+            getAuthHeader())
             .then(() => {
                 setMessage(`Order #${orderId} updated! ✅`);
                 loadOrders();
